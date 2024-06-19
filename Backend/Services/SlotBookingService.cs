@@ -22,7 +22,11 @@ namespace Backend.Services
             await _slotsBooking.InsertOneAsync(slotBooking);
             return slotBooking;
         }
-
+        public async Task<SlotBooking> UpdateSlot(SlotBooking slotBooking)
+        {
+            await _slotsBooking.InsertOneAsync(slotBooking);
+            return slotBooking;
+        }
         public async Task<Slots> UpdateSlots(Slots slots)
         {
             var slot = await GetSlotById(slots.slotId);
@@ -44,6 +48,13 @@ namespace Backend.Services
             return slot;
         }
 
+        public async Task<SlotBooking> GetSlotByBookingId(string bookingId)
+        {
+            var res = await _slotsBooking.Find(x => x.BookingId == bookingId).FirstOrDefaultAsync();
+            return res;
+        }
+        
+        
 
     }
 

@@ -8,6 +8,7 @@ namespace Backend.Models
         public string? VechileNumber { get; set; }
         public string? VechileType { get; set; }
         public string? BookingId    { get; set; }
+        public double? Amount { get; set; }
         public DateTime ParkingEntry { get; set; }
         public DateTime ParkingExit { get; set; }
         public bool Status { get; set; }

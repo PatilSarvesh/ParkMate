@@ -35,7 +35,6 @@ const BookingConfirmation = () => {
       VechileType: vehicleType
     };
 
-    console.log("slot", slot);
     try {
       const response = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/BookSlot`, slot);
       console.log('Form Data Submitted: ', response.data);

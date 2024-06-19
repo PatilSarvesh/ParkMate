@@ -9,5 +9,13 @@ namespace Backend.Common
             public const string Bicycle = "Bicycle";
         }
 
+        public static class ParkingCost
+        {
+            public const string StandardHr = "6";
+            public const string BikePerHr = "30";
+            public const string BicyclePerHr = "20";
+            public const string CarPerHr = "50";
+
+        }
     }
 }

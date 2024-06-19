@@ -8,6 +8,7 @@ namespace Backend.Services
         public  Task<Slots> UpdateSlots(Slots slots);
          public  Task<Slots> GetSlotById(string slotId);
           public  Task<List<Slots>> GetAllSlots();
+          public  Task<SlotBooking> GetSlotByBookingId(string bookingId);
     }
     
 }

@@ -67,6 +67,14 @@ app.MapGet("/GetAllSlots", async (ISlotBookingFactory slotBookingFactory) =>{
     var res = await slotBookingFactory.GetAllSlotsAsync();
     return Results.Ok(res);
 });
+app.MapGet("/Exit", async (ISlotBookingFactory slotBookingFactory, string BookingId) =>  {
+
+});
+
+app.MapGet("/GetBookingDetails", async (ISlotBookingFactory slotBookingFactory, string bookingNumber) =>{
+    var res = await slotBookingFactory.GetBookingDetailsByBookingId(bookingNumber);
+    return Results.Ok(res);
+});
 // Use CORS middleware
 app.UseCors("CorsPolicy");
 app.Run();
