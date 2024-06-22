@@ -7,6 +7,7 @@ namespace Backend.Facories
         public Task<SlotBooking> CreateSlotBooking(SlotBooking slotBooking);
         public  Task<List<Slots>> GetAllSlotsAsync();
          public   Task<SlotBooking> GetBookingDetailsByBookingId(string bookingId);
+          public  Task ExitSlot(SlotBooking slotBooking);
     }
     
 }

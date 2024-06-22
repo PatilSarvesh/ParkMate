@@ -4,9 +4,9 @@ namespace Backend.Common
     {
         public static class VechileType
         {
-            public const string Bike = "Bike";
-            public const string Car = "Car";
-            public const string Bicycle = "Bicycle";
+            public const string Bike = "bike";
+            public const string Car = "car";
+            public const string Bicycle = "bicycle";
         }
 
         public static class ParkingCost

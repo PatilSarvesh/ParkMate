@@ -27,7 +27,8 @@ const Exit = () => {
   const handlePayment = async () => {
     try {
       setPaymentProcessing(true);
-      const response = await axios.post('/api/parking/pay', { bookingId: bookingNumber });
+      const bookingDetails1 = bookingDetails;
+      const response = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/Exit`, bookingDetails1);
       alert(response.data.message);
       setBookingDetails(null);
       setBookingNumber('');
@@ -62,7 +63,7 @@ const Exit = () => {
         <div className="mt-6 p-4 border rounded-lg shadow-md bg-white">
           <h2 className="text-xl font-bold mb-2">Booking Details</h2>
           <p><strong>Slot ID:</strong> {bookingDetails.slotId}</p>
-          <p><strong>Price:</strong> ${bookingDetails.price}</p>
+          <p><strong>Price:</strong> ${bookingDetails.amount}</p>
           <button
             className="bg-green-500 text-white px-6 py-2 mt-4 rounded-lg shadow-md hover:bg-green-600"
             onClick={handlePayment}

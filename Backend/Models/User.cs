@@ -2,7 +2,7 @@ using MongoDB.Bson;
 
 namespace Backend.Models
 {
-    public class User
+    public class User 
     {
     public ObjectId Id { get; set; }
     public string name { get; set;}

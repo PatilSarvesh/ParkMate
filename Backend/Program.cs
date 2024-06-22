@@ -1,7 +1,10 @@
+using System.Text;
 using Backend.Facories;
 using Backend.Models;
 using Backend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +39,30 @@ builder.Services.AddScoped<ISlotBookingService, SlotBookingService>();
 builder.Services.AddScoped<IUserFactory, UserFactory>();
 builder.Services.AddScoped<ISlotBookingFactory, SlotBookingFactory>();
 
+//
+var identityUrl = builder.Configuration.GetSection("IdentityUrl").ToString();
+
+builder.Services.AddAuthentication(x =>
+{
+
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.Authority = identityUrl;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtKey").ToString())),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,22 +83,25 @@ app.MapGet("/BookSlots", async () =>
 app.MapPost("/CreateUser", async (IUserFactory userFactory, [FromBody] User user) =>
 {
     var res = await userFactory.CreateUserAsync(user);
-    return Results.Ok(user);
+    return Results.Ok(res);
 });
 app.MapPost("/BookSlot", async (ISlotBookingFactory slotBookingFactory, [FromBody] SlotBooking slot) =>
 {
     var res = await slotBookingFactory.CreateSlotBooking(slot);
     return Results.Ok(slot);
 });
-app.MapGet("/GetAllSlots", async (ISlotBookingFactory slotBookingFactory) =>{
+app.MapGet("/GetAllSlots", async (ISlotBookingFactory slotBookingFactory) =>
+{
     var res = await slotBookingFactory.GetAllSlotsAsync();
     return Results.Ok(res);
 });
-app.MapGet("/Exit", async (ISlotBookingFactory slotBookingFactory, string BookingId) =>  {
-
+app.MapPost("/Exit", async (ISlotBookingFactory slotBookingFactory, [FromBody] SlotBooking bookingDetails1) =>
+{
+    await slotBookingFactory.ExitSlot(bookingDetails1);
 });
 
-app.MapGet("/GetBookingDetails", async (ISlotBookingFactory slotBookingFactory, string bookingNumber) =>{
+app.MapGet("/GetBookingDetails", async (ISlotBookingFactory slotBookingFactory, string bookingNumber) =>
+{
     var res = await slotBookingFactory.GetBookingDetailsByBookingId(bookingNumber);
     return Results.Ok(res);
 });

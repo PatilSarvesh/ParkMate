@@ -24,7 +24,9 @@ namespace Backend.Services
         }
         public async Task<SlotBooking> UpdateSlot(SlotBooking slotBooking)
         {
-            await _slotsBooking.InsertOneAsync(slotBooking);
+            var filter = Builders<SlotBooking>.Filter.Eq(s => s.SlotId, slotBooking.SlotId);
+            var update = Builders<SlotBooking>.Update.Set(s => s.Status, slotBooking.Status);
+            await _slotsBooking.UpdateOneAsync(filter,update);
             return slotBooking;
         }
         public async Task<Slots> UpdateSlots(Slots slots)
