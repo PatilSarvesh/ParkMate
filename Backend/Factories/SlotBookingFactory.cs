@@ -10,22 +10,23 @@ namespace Backend.Facories
     public class SlotBookingFactory : ISlotBookingFactory
     {
         private readonly ISlotBookingService _slotBookingService;
+        private readonly IPaymentFactory _paymentFactory;
 
-        public SlotBookingFactory(ISlotBookingService slotBookingService)
+        public SlotBookingFactory(ISlotBookingService slotBookingService, IPaymentFactory paymentFactory)
         {
             _slotBookingService = slotBookingService;
+            _paymentFactory = paymentFactory;
         }
 
         public async Task<SlotBooking> CreateSlotBooking(SlotBooking slotBooking)
         {
-            slotBooking.CreatedAt = DateTime.Now;
             slotBooking.Status = true;
-            slotBooking.UserId =  Guid.NewGuid().ToString();
             slotBooking.BookingId = Guid.NewGuid().ToString();
-            
 
             slotBooking = await _slotBookingService.BookSlot(slotBooking);
+
             var slot = await _slotBookingService.GetSlotById(slotBooking.SlotId);
+
             slot.isAvailable = false;
             await _slotBookingService.UpdateSlots(slot);
 
@@ -52,35 +53,11 @@ namespace Backend.Facories
         public async  Task<SlotBooking> GetBookingDetailsByBookingId(string bookingId)
         {
                 var res = await _slotBookingService.GetSlotByBookingId(bookingId);
-                    res = await CalculatetAmount(res);
+                    res.ParkingExit = DateTime.Now;
+                    res = await _paymentFactory.CalculatetAmount(res);
                 return res;
         } 
 
-        public async Task<SlotBooking> CalculatetAmount(SlotBooking slotBooking)
-        {
-            slotBooking.ParkingExit = DateTime.Now;
-
-            // Calculate total parked hours
-            var parkedHours = ((int)(slotBooking.ParkingExit - slotBooking.ParkingEntry).TotalHours);
-            
-            int costPerHour = 0;
-            
-            switch (slotBooking.VechileType.ToLower())
-            {
-                case VechileType.Bike:
-                    costPerHour = int.Parse(ParkingCost.BikePerHr);
-                    break;
-                case VechileType.Car:
-                    costPerHour = int.Parse(ParkingCost.CarPerHr);
-                    break;
-                case VechileType.Bicycle:
-                    costPerHour = int.Parse(ParkingCost.BicyclePerHr);
-                    break;
-                default:
-                    throw new ArgumentException("Invalid vehicle type");
-            }
-             slotBooking.Amount = parkedHours * costPerHour;
-             return slotBooking;
-        }
+        
     }       
 }

@@ -23,9 +23,11 @@ const GoogleSignIn = () => {
     };
 
     const data = await axios.post(`${process.env.REACT_APP_BASE_API_URL}/CreateUser`, User);
+
     if(data.status === 200){
       setIsAuthenticated(true)
-      setUser(User);
+      setUser(data.data);
+      localStorage.setItem('token', data.data.jwtToken);
       navigate("/Home");
     }
     // if(isAuthenticated)
