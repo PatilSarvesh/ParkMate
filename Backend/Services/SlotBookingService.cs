@@ -26,9 +26,11 @@ namespace Backend.Services
         {
             var filter = Builders<SlotBooking>.Filter.Eq(s => s.SlotId, slotBooking.SlotId);
             var update = Builders<SlotBooking>.Update.Set(s => s.Status, slotBooking.Status);
+                update = Builders<SlotBooking>.Update.Set(s => s.ParkingExit, slotBooking.ParkingExit);
             await _slotsBooking.UpdateOneAsync(filter,update);
             return slotBooking;
         }
+
         public async Task<Slots> UpdateSlots(Slots slots)
         {
             var slot = await GetSlotById(slots.slotId);
@@ -36,8 +38,8 @@ namespace Backend.Services
             var update = Builders<Slots>.Update.Set(s => s.isAvailable, slots.isAvailable);
             await _slots.UpdateOneAsync(filter, update);
             return slots;
-            
         }
+
         public async Task<List<Slots>> GetAllSlots()
         {
             var slots = await _slots.AsQueryable().ToListAsync();
@@ -55,8 +57,6 @@ namespace Backend.Services
             var res = await _slotsBooking.Find(x => x.BookingId == bookingId).FirstOrDefaultAsync();
             return res;
         }
-        
-        
 
     }
 

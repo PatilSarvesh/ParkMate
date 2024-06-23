@@ -1,8 +1,11 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useUser } from '../UserContext/UserContext';
 
 const BookingConfirmation = () => {
+  const {user} = useUser();
+  console.log(user);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -32,7 +35,8 @@ const BookingConfirmation = () => {
       VechileNumber: formData.VechileNumber,
       parkingEntry: formData.parkingEntry,
       slotId: selectedSlot,
-      VechileType: vehicleType
+      VechileType: vehicleType,
+      UserId: user.userId
     };
 
     try {

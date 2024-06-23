@@ -1,5 +1,6 @@
 using Backend.Common;
 using Backend.Models;
+using static Backend.Common.Costants;
 
 namespace Backend.Facories
 {
@@ -11,33 +12,31 @@ namespace Backend.Facories
 
         }
 
-        // private  SlotBooking  CalculatetAmount(SlotBooking slotBooking)
-        // {
-        //     slotBooking.ParkingExit = DateTime.Now;
+       public async Task<SlotBooking> CalculatetAmount(SlotBooking slotBooking)
+        {
 
-        //     // Calculate total parked hours
-        //     var parkedHours = (slotBooking.ParkingExit - slotBooking.ParkingEntry).TotalHours.;
+            // Calculate total parked hours
+            var parkedHours = ((int)(slotBooking.ParkingExit - slotBooking.ParkingEntry).TotalHours);
             
-        //     double costPerHour = 0;
+            int costPerHour = 0;
             
-        //     switch (slotBooking.VechileType)
-        //     {
-        //         case Costants.VechileType.Bike:
-        //             costPerHour = double.Parse(Costants.ParkingCost.BikePerHr);
-        //             break;
-        //         case Costants.VechileType.Car:
-        //             costPerHour = double.Parse(Costants.ParkingCost.CarPerHr);
-        //             break;
-        //         case Costants.VechileType.Bicycle:
-        //             costPerHour = double.Parse(Costants.ParkingCost.BicyclePerHr);
-        //             break;
-        //         default:
-        //             throw new ArgumentException("Invalid vehicle type");
-        //     }
-        //      slotBooking.Amount = parkedHours * costPerHour;
-        //      return slotBooking;
-        // }
-
+            switch (slotBooking.VechileType.ToLower())
+            {
+                case VechileType.Bike:
+                    costPerHour = int.Parse(ParkingCost.BikePerHr);
+                    break;
+                case VechileType.Car:
+                    costPerHour = int.Parse(ParkingCost.CarPerHr);
+                    break;
+                case VechileType.Bicycle:
+                    costPerHour = int.Parse(ParkingCost.BicyclePerHr);
+                    break;
+                default:
+                    throw new ArgumentException("Invalid vehicle type");
+            }
+             slotBooking.Amount = parkedHours * costPerHour;
+             return slotBooking;
+        }
         public async Task GetPaymentDetailsByBookigId(string bookingId)
         {
 
