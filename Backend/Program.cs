@@ -1,5 +1,6 @@
 using System.Text;
 using Backend.Facories;
+using Backend.Hubs;
 using Backend.Models;
 using Backend.Services;
 using Carter;
@@ -14,14 +15,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCarter();
+builder.Services.AddSignalR();
 
 // Add CORS services
 builder.Services.AddCors(options =>
     {
-        options.AddPolicy("CorsPolicy",
-            builder => builder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+         options.AddPolicy("AllowSpecificOrigin",
+            builder =>
+            {
+                builder.WithOrigins("http://localhost:3000")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowCredentials();
+            });
     });
 
 
@@ -32,7 +38,7 @@ builder.Services.Configure<MongoCollections>(
     builder.Configuration.GetSection("MongoCollections")
     );
 
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings1"));
 
 //Services    
 builder.Services.AddScoped<IUserService, UserService>();
@@ -80,8 +86,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
+app.UseWebSockets();
+app.MapHub<SlotHub>("/slothub");
 // Use CORS middleware
-app.UseCors("CorsPolicy");
+app.UseCors("AllowSpecificOrigin");
+
 
 app.MapCarter();
 app.Run();

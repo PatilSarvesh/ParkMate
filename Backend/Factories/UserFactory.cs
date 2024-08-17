@@ -32,7 +32,7 @@ namespace Backend.Facories
             var existingUser = await _userService.GetUserByEmail(user.email);
             if ( existingUser != null)
             {   
-                //await _emailSender.SendEmailAsync(user.email, "Test", "This is test email");
+                await _emailSender.SendEmailAsync(user.email, "Test", "This is test email");
                 existingUser.jwtToken = Authenticate(existingUser.email);
                 return  existingUser;
             }
@@ -40,7 +40,7 @@ namespace Backend.Facories
             user.UserId = Guid.NewGuid().ToString();
             user.CreatedAt = DateTime.Now;
             await _userService.RegisterUser(user);
-            //await _emailSender.SendEmailAsync(user.email, "Test", "This is test email");
+            await _emailSender.SendEmailAsync(user.email, "Test", "This is test email");
             user.jwtToken = Authenticate(user.email);
             return  user;
         }
