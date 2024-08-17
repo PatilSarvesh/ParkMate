@@ -12,7 +12,7 @@ namespace Backend.Facories
 
         }
 
-       public async Task<SlotBooking> CalculatetAmount(SlotBooking slotBooking)
+       public  SlotBooking CalculatetAmount(SlotBooking slotBooking)
         {
 
             // Calculate total parked hours
