@@ -1,6 +1,7 @@
+
 using Backend.Common;
 using Backend.Models;
-using static Backend.Common.Costants;
+
 
 namespace Backend.Facories
 {
@@ -12,33 +13,68 @@ namespace Backend.Facories
 
         }
 
-       public  SlotBooking CalculatetAmount(SlotBooking slotBooking)
+        public SlotBooking CalculatetAmount(SlotBooking slotBooking)
         {
 
             // Calculate total parked hours
             var parkedHours = ((int)(slotBooking.ParkingExit - slotBooking.ParkingEntry).TotalHours);
-            
-            int costPerHour = 0;
-            
+
+            int cost = 0;
+
             switch (slotBooking.VechileType.ToLower())
             {
-                case VechileType.Bike:
-                    costPerHour = int.Parse(ParkingCost.BikePerHr);
+                case HelperConstants.VechileType.Bike:
+                    cost = CalculateBikeAmmount(parkedHours);
                     break;
-                case VechileType.Car:
-                    costPerHour = int.Parse(ParkingCost.CarPerHr);
+                case HelperConstants.VechileType.Car:
+                    cost = CalculateCarAmmount(parkedHours);
                     break;
-                case VechileType.Bicycle:
-                    costPerHour = int.Parse(ParkingCost.BicyclePerHr);
+                case HelperConstants.VechileType.Bicycle:
+                    cost = CalculateBicycleAmmount(parkedHours);
                     break;
                 default:
                     throw new ArgumentException("Invalid vehicle type");
             }
-             slotBooking.Amount = parkedHours * costPerHour;
-             return slotBooking;
+            slotBooking.Amount = cost;
+            return slotBooking;
         }
         public async Task GetPaymentDetailsByBookigId(string bookingId)
         {
+
+        }
+        private int CalculateBikeAmmount(int hours)
+        {
+            if (hours <= 2)
+                return HelperConstants.ParkingCost.BikePerHr;
+            else if (hours <= 4)
+                return HelperConstants.ParkingCost.BikePerHr + 50;
+            else if (hours <= 6)
+                return HelperConstants.ParkingCost.BikePerHr + 100;
+            else
+                return UnitConversions.HoursToDays(hours) * HelperConstants.ParkingCost.BikePerDay;
+
+        }
+        private int CalculateCarAmmount(int hours)
+        {
+            if (hours <= 2)
+                return HelperConstants.ParkingCost.CarPerHr;
+            else if (hours <= 4)
+                return HelperConstants.ParkingCost.CarPerHr + 50;
+            else if (hours <= 6)
+                return HelperConstants.ParkingCost.CarPerHr + 100;
+            else
+                return UnitConversions.HoursToDays(hours) * HelperConstants.ParkingCost.CarPerDay;
+        }
+        private int CalculateBicycleAmmount(int hours)
+        {
+            if (hours <= 2)
+                return HelperConstants.ParkingCost.BicyclePerHr;
+            else if (hours <= 4)
+                return HelperConstants.ParkingCost.BicyclePerHr + 50;
+            else if (hours <= 6)
+                return HelperConstants.ParkingCost.BicyclePerHr + 100;
+            else
+                return UnitConversions.HoursToDays(hours) * HelperConstants.ParkingCost.BicyclePerDay;
 
         }
     }
