@@ -6,14 +6,14 @@ namespace Backend.Services
 {
     public class PaymentService : IPaymentService
     {
-        private readonly IMongoCollection<Slots> _slots;
+        private readonly IMongoCollection<Slot> _slots;
         private readonly IMongoCollection<SlotBooking> _slotsBooking;
 
         public PaymentService(IOptions<MongoDBSettings> mongoDBSettings, IOptions<MongoCollections> collections)
         {
             MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionString);
             IMongoDatabase database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
-            _slots = database.GetCollection<Slots>(collections.Value.SlotsCollection);
+            _slots = database.GetCollection<Slot>(collections.Value.SlotsCollection);
             _slotsBooking = database.GetCollection<SlotBooking>(collections.Value.SlotBookingCollection);
         }
 

@@ -9,7 +9,7 @@ namespace Backend.EndPoints
     {
         public override void AddRoutes(IEndpointRouteBuilder app)
         {
-            
+
             app.MapPost("/BookSlot", async (ISlotBookingFactory slotBookingFactory, [FromBody] SlotBooking slot) =>
             {
                 var res = await slotBookingFactory.CreateSlotBooking(slot);
@@ -30,7 +30,19 @@ namespace Backend.EndPoints
                 var res = await slotBookingFactory.GetBookingDetailsByBookingId(bookingNumber);
                 return Results.Ok(res);
             });
+            app.MapPost("/LockSpot/{slotId}", async (ISlotBookingFactory slotBookingFactory, string slotId) =>
+            {       
+                await slotBookingFactory.LockSpot(slotId);
+                return Results.Ok();
+    }       );
+
+            app.MapPost("/UnlockSpot/{slotId}", async (ISlotBookingFactory slotBookingFactory, string slotId, [FromQuery] bool isBookingConfirmed) =>
+            {
+                await slotBookingFactory.UnlockSpot(slotId, isBookingConfirmed);
+                return Results.Ok();
+            });
+
         }
     }
-    
+
 }

@@ -1,35 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { FaUserCircle, FaSun, FaMoon } from 'react-icons/fa';
-import { useUser } from '../UserContext/UserContext';
+import React, { useState, useEffect } from "react";
+import { FaUserCircle, FaSun, FaMoon } from "react-icons/fa";
+import { useUser } from "../UserContext/UserContext";
+import { Link } from "react-router-dom";
 
 const Navbar = ({ username }) => {
   const [darkMode, setDarkMode] = useState(false);
-  const {user} = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
-    const savedMode = localStorage.getItem('darkMode') === 'true';
+    const savedMode = localStorage.getItem("darkMode") === "true";
     setDarkMode(savedMode);
-    document.documentElement.classList.toggle('dark', savedMode);
+    document.documentElement.classList.toggle("dark", savedMode);
   }, []);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-    localStorage.setItem('darkMode', !darkMode);
-    document.documentElement.classList.toggle('dark', !darkMode);
+    localStorage.setItem("darkMode", !darkMode);
+    document.documentElement.classList.toggle("dark", !darkMode);
   };
 
   return (
     <nav className="bg-blue-500 p-4 shadow-md dark:bg-gray-800">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="text-white text-2xl font-bold dark:text-gray-200">
+        <Link
+          to="/Home"
+          className="text-white text-2xl font-bold dark:text-gray-200"
+        >
           Parking App
-        </div>
+        </Link>
         <div className="flex items-center">
-          <button
-            onClick={toggleDarkMode}
-            className="mr-4 focus:outline-none"
-          >
-            {darkMode ? <FaSun className="text-yellow-500" /> : <FaMoon className="text-gray-300" />}
+          <button onClick={toggleDarkMode} className="mr-4 focus:outline-none">
+            {darkMode ? (
+              <FaSun className="text-yellow-500" />
+            ) : (
+              <FaMoon className="text-gray-300" />
+            )}
           </button>
           {user ? (
             <img
@@ -41,7 +46,9 @@ const Navbar = ({ username }) => {
             <FaUserCircle className="text-white text-3xl mr-2  dark:text-gray-200" />
           )}
           {/* <FaUserCircle className="text-white text-3xl mr-2" /> */}
-          <span className="text-white text-lg dark:text-gray-200">{user.name}</span>
+          <span className="text-white text-lg dark:text-gray-200">
+            {user.name}
+          </span>
         </div>
       </div>
     </nav>

@@ -16,6 +16,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCarter();
 builder.Services.AddSignalR();
+builder.Services.AddMemoryCache(); // Add this line
+
 
 // Add CORS services
 builder.Services.AddCors(options =>
