@@ -6,14 +6,14 @@ namespace Backend.Services
 {
     public class SlotBookingService :ISlotBookingService
     {
-        private readonly IMongoCollection<Slots> _slots;
+        private readonly IMongoCollection<Slot> _slots;
         private readonly IMongoCollection<SlotBooking> _slotsBooking;
 
         public SlotBookingService(IOptions<MongoDBSettings> mongoDBSettings, IOptions<MongoCollections> collections)
         {
             MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionString);
             IMongoDatabase database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
-            _slots = database.GetCollection<Slots>(collections.Value.SlotsCollection);
+            _slots = database.GetCollection<Slot>(collections.Value.SlotsCollection);
             _slotsBooking = database.GetCollection<SlotBooking>(collections.Value.SlotBookingCollection);
         }
 
@@ -31,22 +31,23 @@ namespace Backend.Services
             return slotBooking;
         }
 
-        public async Task<Slots> UpdateSlots(Slots slots)
+        public async Task<Slot> UpdateSlots(Slot slots)
         {
             var slot = await GetSlotById(slots.slotId);
-            var filter = Builders<Slots>.Filter.Eq(s => s.slotId, slots.slotId);
-            var update = Builders<Slots>.Update.Set(s => s.isAvailable, slots.isAvailable);
+            var filter = Builders<Slot>.Filter.Eq(s => s.slotId, slots.slotId);
+            var update = Builders<Slot>.Update.Set(s => s.isAvailable, slots.isAvailable)
+                                                .Set(s=>s.isSlotInUse, slots.isSlotInUse);
             await _slots.UpdateOneAsync(filter, update);
             return slots;
         }
 
-        public async Task<List<Slots>> GetAllSlots()
+        public async Task<List<Slot>> GetAllSlots()
         {
             var slots = await _slots.AsQueryable().ToListAsync();
             return slots;
         }
 
-        public async Task<Slots> GetSlotById(string slotId)
+        public async Task<Slot> GetSlotById(string slotId)
         {
             var slot = await _slots.Find(x=> x.slotId == slotId).FirstOrDefaultAsync();
             return slot;

@@ -5,7 +5,7 @@ namespace Backend.Hubs
 {
     public class SlotHub : Hub
     {
-        public async Task SendMessage(List<Slots> message)
+        public async Task SendMessage(List<Slot> message)
         {
             await Clients.All.SendAsync("ReceiveMessage", message);
         }

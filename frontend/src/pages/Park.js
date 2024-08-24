@@ -12,8 +12,14 @@ const Park = () => {
   const [bicycleSlots, setBicycleSlots] = useState([]);
   const navigate = useNavigate();
 
-  const handleBooking = () => {
-    navigate(`/slotBooking?slotId=${selectedSlot}&type=${vehicleType}`);
+  const handleBooking = async () => {
+    try {
+      await axios.post(`${process.env.REACT_APP_BASE_API_URL}/LockSpot/${selectedSlot}`);
+      navigate(`/slotBooking?slotId=${selectedSlot}&type=${vehicleType}`);
+    } catch (error) {
+      console.error("Error locking the slot:", error);
+    }
+  
   };
 
   useEffect(() => {
@@ -26,6 +32,7 @@ const Park = () => {
         setBikeSlots(slots.filter(slot => slot.type === 'Bike'));
         setCarSlots(slots.filter(slot => slot.type === 'Car'));
         setBicycleSlots(slots.filter(slot => slot.type === 'Bicycle'));
+     
       } catch (error) {
         console.error('Error fetching slots:', error);
       }
@@ -47,17 +54,16 @@ const Park = () => {
     connection.on("ReceiveMessage", (message) => {
 
         console.log("Hi",message);
-
         setBikeSlots(message.filter(slot => slot.type === 'Bike'));
         setCarSlots(message.filter(slot => slot.type === 'Car'));
         setBicycleSlots(message.filter(slot => slot.type === 'Bicycle'));
+       
     });
 
     return () => {
         connection.stop().then(() => console.log("Disconnected from SignalR hub"));
     };
 }, []);
-
 
 
   // Determine the slots to display based on selected vehicle type
@@ -97,20 +103,20 @@ const Park = () => {
         {slotsToDisplay.map(slot => (
           <button
             key={slot.slotId}
-            className={`p-4 rounded-lg shadow-md ${selectedSlot === slot.slotId ? 'bg-green-500 text-white' : 'bg-white text-black'} ${!slot.isAvailable ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : ''}`}
+            className={`p-4 rounded-lg shadow-md ${selectedSlot === slot.slotId ? 'bg-green-500 text-white' : 'bg-white text-black'} ${!slot.isAvailable || slot.isSlotInUse ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : ''}`}
            // className={`p-4 rounded-lg shadow-md ${selectedSlot === slot.slotId ? 'bg-green-500 text-white' : 'bg-white text-black'}`}
             onClick={() => setSelectedSlot(slot.slotId)}
-            disabled={!slot.isAvailable}
+            disabled={!slot.isAvailable || slot.isSlotInUse }
           >
             Slot {slot.slotId}
           </button>
         ))}
       </div>
       <button
-        className={`bg-blue-500 text-white px-8 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200  ${!selectedSlot ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : ''}`}
+        className={`bg-blue-500 text-white px-8 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200  ${!selectedSlot || !slotsToDisplay.find(slot => slot.slotId === selectedSlot)?.isAvailable || slotsToDisplay.find(slot => slot.slotId === selectedSlot)?.isSlotInUse ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : ''}`}
         // className="bg-blue-500 text-white px-8 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
         onClick={handleBooking}
-        disabled={!selectedSlot}
+        disabled={!selectedSlot || !slotsToDisplay.find(slot => slot.slotId === selectedSlot)?.isAvailable || slotsToDisplay.find(slot => slot.slotId === selectedSlot)?.isSlotInUse }
       >
         Book Slot
       </button>
