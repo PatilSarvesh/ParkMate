@@ -1,11 +1,11 @@
 using System.Text;
 using Backend.Facories;
+using Backend.Factories;
 using Backend.Hubs;
 using Backend.Models;
 using Backend.Services;
 using Carter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);

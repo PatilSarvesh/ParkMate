@@ -1,11 +1,11 @@
+using Backend.Facories;
 using Backend.Hubs;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 
-
-namespace Backend.Facories
+namespace Backend.Factories
 {
     public class SlotBookingFactory : ISlotBookingFactory
     {
@@ -43,7 +43,6 @@ namespace Backend.Facories
         public async Task<List<Slot>> GetAllSlotsAsync()
         {
             var slots = await _slotBookingService.GetAllSlots();
-            //await BroadcastUpdate1();
             await _hubContext.Clients.All.SendAsync("ReceiveMessage", slots);
 
             return slots;
