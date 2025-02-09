@@ -1,4 +1,4 @@
-using Backend.Facories;
+using Backend.Factories;
 using Backend.Hubs;
 using Backend.Models;
 using Backend.Services;

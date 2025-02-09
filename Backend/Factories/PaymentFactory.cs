@@ -3,7 +3,7 @@ using Backend.Common;
 using Backend.Models;
 
 
-namespace Backend.Facories
+namespace Backend.Factories
 {
 
     public class PaymentFactory : IPaymentFactory

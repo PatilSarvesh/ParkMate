@@ -1,6 +1,6 @@
 using Backend.Models;
 
-namespace Backend.Facories
+namespace Backend.Factories
 {
     public interface IUserFactory
     {

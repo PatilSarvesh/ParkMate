@@ -5,7 +5,7 @@ using Backend.Models;
 using Backend.Services;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Backend.Facories
+namespace Backend.Factories
 {
 
     public class UserFactory : IUserFactory

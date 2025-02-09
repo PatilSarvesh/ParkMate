@@ -1,4 +1,4 @@
-using Backend.Facories;
+using Backend.Factories;
 using Backend.Models;
 using Carter;
 using Microsoft.AspNetCore.Mvc;
